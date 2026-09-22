@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Immigrant Outreach Society (IOS) · Calgary</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.462.0/dist/umd/lucide.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
+    <!-- =========================================================
+         ASSET FOLDER STRUCTURE (RELATIVE PATHS):
+         your-folder/
+           index.html
+           assets/
+             images/
+               logo.png
+               community-banner.jpg
+               east-africa-mosaic.jpg     <-- Your East Africa map mosaic
+               testimonials/
+                 medhin.jpg
+                 joseph.jpg
+                 cps-partner.jpg
+               journey/
+                 journey-01-arrival.png
+                 journey-02-connection.png
+                 journey-03-belonging.png
+         ========================================================= -->
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4', 100: '#dcfce7', 200: '#bbf7d0', 300: '#6ee7b7',
+                            500: '#10b981', 600: '#059669', 700: '#047857', 800: '#065f46', 900: '#064e3b'
+                        },
+                        navy: { 800: '#0f172a', 900: '#090d1a', 950: '#030712' },
+                        gold: { 50: '#fffbeb', 100: '#fef3c7', 200: '#fde68a', 300: '#f6e2b8', 400: '#e8bd77', 500: '#d9a24e', 600: '#b9822f' }
+                    },
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'], serif: ['"Playfair Display"', 'serif'] }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        html { scroll-behavior: smooth; }
+        body { background-color: #f8fafc; color: #1e293b; overflow-x: hidden; font-feature-settings: "cv02", "cv03", "cv04", "cv11"; }
+
+        .skip-link {
+            position: absolute; left: -999px; top: 0; z-index: 100;
+            background: #090d1a; color: #fff; padding: .75rem 1.25rem; border-radius: 0 0 .5rem 0;
+            font-weight: 600; font-size: .85rem;
+        }
+        .skip-link:focus { left: 0; }
+        :focus-visible { outline: 2px solid #10b981; outline-offset: 2px; }
+
+        .hero-banner-parallax {
+            position: relative; width: 100vw; margin-left: calc(-50vw + 50%); margin-right: calc(-50vw + 50%);
+            min-height: 80vh; display: flex; align-items: center; justify-content: center;
+            background-color: #090d1a; background-image: url('assets/images/community-banner.jpg');
+            background-attachment: fixed; background-size: cover; background-position: center;
+        }
+        .hero-banner-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(180deg, rgba(9,13,26,.75) 0%, rgba(9,13,26,.6) 50%, rgba(9,13,26,.95) 100%);
+        }
+
+        .brand-logo { position: relative; flex: none; }
+        .brand-logo-img {
+            position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;
+            border-radius: inherit; background: #fff; padding: 3px; opacity: 0; transition: opacity .3s ease;
+        }
+        .brand-logo-img.is-visible { opacity: 1; }
+
+        /* Testimonial avatar handling */
+        .avatar-wrap { position: relative; width: 3.25rem; height: 3.25rem; border-radius: 9999px; overflow: hidden; flex: none; }
+        .avatar-wrap img {
+            width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .4s ease;
+            position: absolute; inset: 0; z-index: 2;
+        }
+        .avatar-wrap img.is-visible { opacity: 1; }
+        .avatar-initials {
+            position: absolute; inset: 0; z-index: 1;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 1rem;
+        }
+
+        /* Journey cards */
+        .journey-card {
+            --cursor-x: 50%; --cursor-y: 50%; --glow-opacity: 0.15;
+            position: relative; border-radius: 1.75rem;
+            background: radial-gradient(circle at var(--cursor-x) var(--cursor-y), rgba(232,189,119,.12) 0%, #080d1a 75%);
+            border: 1px solid rgba(255,255,255,.08); box-shadow: 0 20px 45px -12px rgba(3,7,18,.7);
+            overflow: hidden; transition: transform .5s cubic-bezier(.16,1,.3,1), border-color .4s ease, box-shadow .4s ease;
+        }
+        .journey-card:hover { transform: translateY(-8px); border-color: rgba(232,189,119,.35); box-shadow: 0 30px 60px -15px rgba(232,189,119,.22); }
+        .journey-image-wrapper { position: relative; width: 100%; aspect-ratio: 9 / 16; background: #090d1a; overflow: hidden; }
+        .journey-image-wrapper img {
+            width: 100%; height: 100%; object-fit: cover; display: block; opacity: .78;
+            filter: contrast(1.05) brightness(.92) saturate(.9);
+            transition: opacity .5s ease, filter .5s ease, transform .6s cubic-bezier(.16,1,.3,1);
+            -webkit-mask-image: radial-gradient(circle at 50% 50%, black 58%, rgba(0,0,0,.3) 84%, transparent 100%);
+            mask-image: radial-gradient(circle at 50% 50%, black 58%, rgba(0,0,0,.3) 84%, transparent 100%);
+        }
+        .journey-interactive-spotlight {
+            position: absolute; inset: 0; pointer-events: none; z-index: 2;
+            background: radial-gradient(circle 240px at var(--cursor-x) var(--cursor-y), rgba(254,243,199,.32) 0%, rgba(232,189,119,.12) 40%, transparent 80%);
+            opacity: var(--glow-opacity); mix-blend-mode: soft-light; transition: opacity .4s ease;
+        }
+        .journey-vignette { position: absolute; inset: 0; pointer-events: none; z-index: 3; box-shadow: inset 0 0 50px 25px #090d1a, inset 0 -35px 40px 10px #090d1a; }
+        .journey-card:hover .journey-image-wrapper img { opacity: .98; filter: contrast(1.1) brightness(1.04) saturate(1.05); transform: scale(1.03); }
+
+        .voice-orb { position: absolute; border-radius: 9999px; filter: blur(80px); pointer-events: none; opacity: .6; }
+        .voice-slide { display: none; opacity: 0; transform: translateY(12px); transition: opacity .5s ease, transform .5s ease; }
+        .voice-slide.active { display: block; opacity: 1; transform: translateY(0); }
+
+        .reveal-node { opacity: 0; transform: translateY(28px); transition: opacity .7s cubic-bezier(.16,1,.3,1), transform .7s cubic-bezier(.16,1,.3,1); }
+        .reveal-node.active { opacity: 1; transform: translateY(0); }
+
+        #mobileMenu a { display: block; padding: .85rem 0; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #1e293b; }
+
+        @media (max-width: 1024px) { .hero-banner-parallax { background-attachment: scroll; } }
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            .journey-card, .journey-image-wrapper img, .voice-slide, .reveal-node, .brand-logo-img { transition: none !important; animation: none !important; }
+            .reveal-node { opacity: 1; transform: none; }
+        }
+    </style>
+</head>
+<body class="selection:bg-brand-500 selection:text-white">
+<a href="#main-content" class="skip-link">Skip to content</a>
+
+<!-- Top Strip -->
+<div class="bg-navy-950 text-slate-300 text-xs py-2.5 px-4 relative z-40 border-b border-white/10">
+    <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-3">
+        <div class="flex items-center gap-4">
+            <span class="flex items-center gap-1.5 text-brand-300 font-semibold">
+                <i data-lucide="phone-incoming" class="w-3.5 h-3.5"></i>
+                <a href="tel:4033001440" class="hover:underline text-white font-mono">(403) 300-1440</a>
+            </span>
+            <span class="hidden sm:inline opacity-30">|</span>
+            <span class="hidden sm:flex items-center gap-1.5 text-slate-300">
+                <i data-lucide="map-pin" class="w-3.5 h-3.5 text-gold-400"></i>
+                #1200, 910 7th Ave SW, Calgary, AB T2P 3N8
+            </span>
+        </div>
+        <div class="flex items-center gap-4">
+            <div class="flex items-center bg-white/10 border border-white/15 px-2.5 py-1 rounded-md text-slate-100">
+                <i data-lucide="languages" class="w-3.5 h-3.5 text-brand-300 mr-1.5"></i>
+                <select class="bg-transparent border-none outline-none text-xs text-white cursor-pointer">
+                    <option class="bg-navy-900" value="en">English</option>
+                    <option class="bg-navy-900" value="am">አማርኛ (Amharic)</option>
+                    <option class="bg-navy-900" value="ti">ትግርኛ (Tigrinya)</option>
+                    <option class="bg-navy-900" value="so">Soomaali (Somali)</option>
+                    <option class="bg-navy-900" value="om">Afaan Oromoo</option>
+                </select>
+            </div>
+            <button type="button" onclick="openModal()" class="text-gold-400 hover:text-gold-300 font-semibold flex items-center gap-1">
+                <i data-lucide="calendar" class="w-3.5 h-3.5"></i> Walk-in Schedule
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Main Nav -->
+<header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-3">
+        <a href="#" class="flex items-center gap-3.5 group min-w-0">
+            <span class="brand-logo w-11 h-11 rounded-xl bg-gradient-to-tr from-brand-700 via-brand-500 to-gold-400 flex items-center justify-center text-slate-950 font-black text-xl shadow-md group-hover:scale-105 transition-transform duration-300">
+                IOS
+                <img class="brand-logo-img js-brand-logo" alt="Immigrant Outreach Society logo">
+            </span>
+            <div class="flex flex-col min-w-0">
+                <span class="font-bold text-slate-900 text-lg tracking-tight leading-none group-hover:text-brand-700 transition-colors truncate">Immigrant Outreach Society</span>
+                <span class="text-[11px] text-brand-700 font-bold tracking-wider uppercase mt-1">Calgary · Black-Led &amp; Community Centered</span>
+            </div>
+        </a>
+
+        <nav class="hidden lg:flex items-center gap-7 text-sm font-semibold text-slate-600">
+            <a href="#about" class="hover:text-brand-700 transition-colors">Our Approach</a>
+            <a href="#programs" class="hover:text-brand-700 transition-colors">Programs</a>
+            <a href="#journey" class="hover:text-brand-700 transition-colors">The Journey</a>
+            <a href="#roots" class="hover:text-brand-700 transition-colors">Heritage &amp; Unity</a>
+            <a href="#voices" class="hover:text-brand-700 transition-colors">Community Voices</a>
+            <a href="#events" class="hover:text-brand-700 transition-colors">Workshops</a>
+        </nav>
+
+        <div class="flex items-center gap-3">
+            <button onclick="openModal()" class="hidden sm:flex bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-800 font-semibold px-4 py-2.5 rounded-xl text-sm transition-all items-center gap-2">
+                <i data-lucide="life-buoy" class="w-4 h-4 text-brand-600"></i> Get Support
+            </button>
+            <a href="#donate" class="bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-400 hover:to-gold-500 text-slate-950 font-bold px-5 py-2.5 rounded-xl text-sm transition-all shadow-md shadow-gold-500/20">
+                Donate
+            </a>
+            <button type="button" onclick="toggleMobileMenu()" id="mobileMenuBtn" aria-label="Toggle menu" aria-expanded="false" class="lg:hidden p-2 rounded-lg text-slate-700 hover:bg-slate-100">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+        </div>
+    </div>
+
+    <div id="mobileMenu" class="hidden lg:hidden border-t border-slate-200 bg-white px-4 pb-6 pt-2">
+        <a href="#about" onclick="toggleMobileMenu()">Our Approach</a>
+        <a href="#programs" onclick="toggleMobileMenu()">Programs</a>
+        <a href="#journey" onclick="toggleMobileMenu()">The Journey</a>
+        <a href="#roots" onclick="toggleMobileMenu()">Heritage &amp; Unity</a>
+        <a href="#voices" onclick="toggleMobileMenu()">Community Voices</a>
+        <a href="#events" onclick="toggleMobileMenu()">Workshops</a>
+        <button onclick="openModal(); toggleMobileMenu()" class="w-full mt-4 bg-slate-100 border border-slate-300 text-slate-800 font-semibold py-3 rounded-xl">Get Support</button>
+    </div>
+</header>
+
+<main id="main-content">
+
+<!-- Hero Banner -->
+<section class="hero-banner-parallax">
+    <div class="hero-banner-overlay"></div>
+    <div class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-24 sm:py-32">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-gold-300 text-xs font-bold tracking-widest uppercase mb-6">
+            <i data-lucide="sparkles" class="w-4 h-4 text-gold-400"></i> Welcome to Immigrant Outreach Society
+        </div>
+        <h1 class="font-serif text-4xl sm:text-6xl lg:text-7xl font-bold text-white tracking-tight leading-[1.08]">
+            A stronger start.<br>
+            <span class="font-sans italic font-normal text-3xl sm:text-5xl text-emerald-300">
+                A community that walks together.
+            </span>
+        </h1>
+        <p class="text-base sm:text-xl text-slate-200 mt-6 max-w-2xl mx-auto leading-relaxed">
+            Helping East African and racialized newcomers navigate settlement, language barriers, mental wellbeing, and community connection across Calgary.
+        </p>
+        <div class="flex flex-wrap justify-center gap-4 mt-8">
+            <button onclick="openModal()" class="bg-brand-500 hover:bg-brand-400 text-slate-950 font-bold px-7 py-3.5 rounded-xl transition-all shadow-xl shadow-brand-500/30 text-sm">
+                Request Casework Support
+            </button>
+            <a href="#journey" class="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/25 text-white font-semibold px-6 py-3.5 rounded-xl transition-all text-sm flex items-center gap-2">
+                Explore The Storyline <i data-lucide="arrow-down" class="w-4 h-4"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Quick Contacts -->
+<section id="about" class="bg-white border-b border-slate-200 py-12 relative z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="flex items-start gap-4">
+            <div class="w-12 h-12 rounded-xl bg-brand-50 border border-brand-200 text-brand-600 flex items-center justify-center shrink-0">
+                <i data-lucide="phone-call" class="w-6 h-6"></i>
+            </div>
+            <div>
+                <h4 class="font-bold text-slate-900 text-base">Immediate Helpline</h4>
+                <p class="text-slate-600 text-xs mt-1">Direct community telephone intake:</p>
+                <a href="tel:4033001440" class="font-bold text-brand-700 font-mono text-sm hover:underline">(403) 300-1440</a>
+            </div>
+        </div>
+        <div class="flex items-start gap-4">
+            <div class="w-12 h-12 rounded-xl bg-amber-50 border border-amber-200 text-gold-600 flex items-center justify-center shrink-0">
+                <i data-lucide="building-2" class="w-6 h-6"></i>
+            </div>
+            <div>
+                <h4 class="font-bold text-slate-900 text-base">Downtown Office</h4>
+                <p class="text-slate-600 text-xs mt-1">#1200, 910 7th Ave SW, Calgary</p>
+                <span class="text-slate-500 text-xs">Accessible directly via Downtown C-Train</span>
+            </div>
+        </div>
+        <div class="flex items-start gap-4">
+            <div class="w-12 h-12 rounded-xl bg-sky-50 border border-sky-200 text-sky-600 flex items-center justify-center shrink-0">
+                <i data-lucide="languages" class="w-6 h-6"></i>
+            </div>
+            <div>
+                <h4 class="font-bold text-slate-900 text-base">Language Matching</h4>
+                <p class="text-slate-600 text-xs mt-1">Caseworkers fluent in your mother tongue:</p>
+                <span class="text-slate-800 text-xs font-semibold">Amharic · Tigrinya · Somali · Oromo</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Programs Grid -->
+<section id="programs" class="py-20 bg-slate-50 border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-2xl mb-12 reveal-node">
+            <span class="text-xs font-bold tracking-widest text-brand-700 uppercase">Specialized Hubs</span>
+            <h2 class="font-serif text-3xl sm:text-4xl font-bold text-slate-900 mt-2">Comprehensive Community Programs</h2>
+            <p class="text-slate-600 text-sm sm:text-base mt-2">Connecting newcomers with trusted local resources designed to meet every stage of resettlement.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all border-t-4 border-t-emerald-500 flex flex-col justify-between reveal-node">
+                <div>
+                    <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-5"><i data-lucide="home" class="w-6 h-6"></i></div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Settlement &amp; Housing</h3>
+                    <p class="text-slate-600 text-xs sm:text-sm leading-relaxed mb-6">Permanent lease support, Calgary transit orientation, paperwork translation, and immediate essentials.</p>
+                </div>
+                <button onclick="openModal()" class="text-emerald-700 hover:text-emerald-800 text-xs font-bold flex items-center gap-1">Inquire Now <i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all border-t-4 border-t-sky-500 flex flex-col justify-between reveal-node">
+                <div>
+                    <div class="w-12 h-12 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center mb-5"><i data-lucide="heart-pulse" class="w-6 h-6"></i></div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Psychosocial Wellbeing</h3>
+                    <p class="text-slate-600 text-xs sm:text-sm leading-relaxed mb-6">Culturally grounded 1-on-1 counseling, trauma care, and mental health circles in your primary language.</p>
+                </div>
+                <button onclick="openModal()" class="text-sky-700 hover:text-sky-800 text-xs font-bold flex items-center gap-1">Inquire Now <i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all border-t-4 border-t-amber-500 flex flex-col justify-between reveal-node">
+                <div>
+                    <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center mb-5"><i data-lucide="users" class="w-6 h-6"></i></div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Youth &amp; Active Seniors</h3>
+                    <p class="text-slate-600 text-xs sm:text-sm leading-relaxed mb-6">SALP coffee and tea socials for older adults, along with youth mentorship and academic tutoring tracks.</p>
+                </div>
+                <button onclick="openModal()" class="text-amber-700 hover:text-amber-800 text-xs font-bold flex items-center gap-1">Inquire Now <i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all border-t-4 border-t-rose-500 flex flex-col justify-between reveal-node">
+                <div>
+                    <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center mb-5"><i data-lucide="scale" class="w-6 h-6"></i></div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Advocacy &amp; Equity</h3>
+                    <p class="text-slate-600 text-xs sm:text-sm leading-relaxed mb-6">Institutional anti-racism leadership, police advisory engagement, and tenant legal rights clinics.</p>
+                </div>
+                <button onclick="openModal()" class="text-rose-700 hover:text-rose-800 text-xs font-bold flex items-center gap-1">Inquire Now <i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- The Journey Experience -->
+<section id="journey" class="py-24 bg-navy-950 text-white relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center max-w-3xl mx-auto mb-16 reveal-node">
+            <span class="px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-bold tracking-widest uppercase">
+                The Newcomer Experience
+            </span>
+            <h2 class="font-serif text-3xl sm:text-5xl font-bold mt-4">
+                The Journey of Belonging in Calgary
+            </h2>
+            <p class="text-slate-400 text-sm sm:text-base mt-3 leading-relaxed">
+                Move your cursor across each chapter. Every step forward begins with uncertainty and is illuminated through community connection.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="journey-card js-interactive-card reveal-node">
+                <div class="journey-image-wrapper">
+                    <div class="journey-interactive-spotlight"></div>
+                    <div class="journey-vignette"></div>
+                    <img src="assets/images/journey/journey-01-arrival.png" alt="Newcomer arriving in Calgary at dusk with luggage"
+                         loading="lazy" decoding="async"
+                         onerror="this.style.display='none'; document.getElementById('placeholder1').classList.remove('hidden');">
+                    <div id="placeholder1" class="journey-placeholder hidden">
+                        <div class="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-emerald-300 mb-4">
+                            <i data-lucide="briefcase" class="w-7 h-7"></i>
+                        </div>
+                        <span class="text-xs font-mono text-emerald-300 uppercase tracking-widest mb-1">Slot: journey-01-arrival.png</span>
+                        <h4 class="text-white font-bold text-base mb-1">Arriving at Dusk</h4>
+                        <p class="text-slate-400 text-xs max-w-xs">Drop image into <code class="text-emerald-300">assets/images/journey/</code></p>
+                    </div>
+                </div>
+                <div class="p-6 bg-navy-900/90 border-t border-white/10 relative z-10">
+                    <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest block mb-1">Phase 01 · Arrival</span>
+                    <h3 class="text-lg font-serif font-bold text-white mb-2">Uncertainty in a New City</h3>
+                    <p class="text-slate-400 text-xs leading-relaxed">
+                        Stepping into Calgary with luggage in hand, language differences, and navigating unfamiliar streets at dusk.
+                    </p>
+                </div>
+            </div>
+
+            <div class="journey-card js-interactive-card reveal-node" style="transition-delay: 150ms;">
+                <div class="journey-image-wrapper">
+                    <div class="journey-interactive-spotlight"></div>
+                    <div class="journey-vignette"></div>
+                    <img src="assets/images/journey/journey-02-connection.png" alt="Outreach workers warmly shaking hands with newcomer"
+                         loading="lazy" decoding="async"
+                         onerror="this.style.display='none'; document.getElementById('placeholder2').classList.remove('hidden');">
+                    <div id="placeholder2" class="journey-placeholder hidden">
+                        <div class="w-16 h-16 rounded-full bg-amber-500/20 border border-amber-400/30 flex items-center justify-center text-gold-300 mb-4">
+                            <i data-lucide="handshake" class="w-7 h-7"></i>
+                        </div>
+                        <span class="text-xs font-mono text-gold-300 uppercase tracking-widest mb-1">Slot: journey-02-connection.png</span>
+                        <h4 class="text-white font-bold text-base mb-1">The Warm Greeting</h4>
+                        <p class="text-slate-400 text-xs max-w-xs">Drop image into <code class="text-gold-300">assets/images/journey/</code></p>
+                    </div>
+                </div>
+                <div class="p-6 bg-navy-900/90 border-t border-white/10 relative z-10">
+                    <span class="text-xs font-bold text-gold-400 uppercase tracking-widest block mb-1">Phase 02 · Connection</span>
+                    <h3 class="text-lg font-serif font-bold text-white mb-2">A Welcoming Handshake</h3>
+                    <p class="text-slate-400 text-xs leading-relaxed">
+                        Met by outreach workers who speak your language, offer reassurance, and confirm that you are not alone.
+                    </p>
+                </div>
+            </div>
+
+            <div class="journey-card js-interactive-card reveal-node" style="transition-delay: 300ms;">
+                <div class="journey-image-wrapper">
+                    <div class="journey-interactive-spotlight"></div>
+                    <div class="journey-vignette"></div>
+                    <img src="assets/images/journey/journey-03-belonging.png" alt="Walking together down Calgary avenue following the golden path"
+                         loading="lazy" decoding="async"
+                         onerror="this.style.display='none'; document.getElementById('placeholder3').classList.remove('hidden');">
+                    <div id="placeholder3" class="journey-placeholder hidden">
+                        <div class="w-16 h-16 rounded-full bg-sky-500/20 border border-sky-400/30 flex items-center justify-center text-sky-300 mb-4">
+                            <i data-lucide="sparkles" class="w-7 h-7"></i>
+                        </div>
+                        <span class="text-xs font-mono text-sky-300 uppercase tracking-widest mb-1">Slot: journey-03-belonging.png</span>
+                        <h4 class="text-white font-bold text-base mb-1">The Road Forward</h4>
+                        <p class="text-slate-400 text-xs max-w-xs">Drop image into <code class="text-sky-300">assets/images/journey/</code></p>
+                    </div>
+                </div>
+                <div class="p-6 bg-navy-900/90 border-t border-white/10 relative z-10">
+                    <span class="text-xs font-bold text-sky-400 uppercase tracking-widest block mb-1">Phase 03 · Belonging</span>
+                    <h3 class="text-lg font-serif font-bold text-white mb-2">Walking Ahead Together</h3>
+                    <p class="text-slate-400 text-xs leading-relaxed">
+                        Following the golden path towards housing stability, family wellness, and active community participation.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Cultural Heritage & Unity Banner Feature -->
+<section id="roots" class="py-24 bg-gradient-to-b from-navy-950 via-[#0d1424] to-slate-900 text-white relative border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-gradient-to-br from-[#121b2d] to-[#0a101d] rounded-3xl border border-gold-500/30 shadow-2xl p-8 sm:p-12 lg:p-16 relative overflow-hidden">
+            <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-gold-500/10 filter blur-3xl pointer-events-none"></div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+                <!-- Text / Narrative Side -->
+                <div class="lg:col-span-7 space-y-6">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gold-500/15 border border-gold-500/30 text-gold-300 text-xs font-bold uppercase tracking-wider">
+                        <i data-lucide="compass" class="w-3.5 h-3.5"></i> Unity Through Diversity · East Africa
+                    </div>
+                    <h2 class="font-serif text-3xl sm:text-5xl font-bold leading-tight text-white">
+                        Rooted in Culture.<br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-gold-300 via-gold-400 to-amber-200">
+                            Thriving Together in Calgary.
+                        </span>
+                    </h2>
+                    <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+                        Immigrant Outreach Society provides language-specific, culturally rooted intervention tailored specifically for ethnic minorities from across East Africa—including Ethiopia, Eritrea, Somalia, South Sudan, and Sudan.
+                    </p>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-4 border-t border-white/10">
+                        <div class="p-3 bg-white/5 rounded-xl border border-white/5">
+                            <span class="text-gold-300 font-bold text-sm block">Mother Tongue</span>
+                            <span class="text-xs text-slate-400">Amharic, Tigrinya, Somali &amp; Oromo care</span>
+                        </div>
+                        <div class="p-3 bg-white/5 rounded-xl border border-white/5">
+                            <span class="text-gold-300 font-bold text-sm block">Shared Heritage</span>
+                            <span class="text-xs text-slate-400">Coffee ceremonies, peer trust &amp; elders</span>
+                        </div>
+                        <div class="p-3 bg-white/5 rounded-xl border border-white/5 col-span-2 sm:col-span-1">
+                            <span class="text-gold-300 font-bold text-sm block">Community Led</span>
+                            <span class="text-xs text-slate-400">Black-led advocacy with City partners</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mosaic Artwork Frame -->
+                <div class="lg:col-span-5 flex justify-center">
+                    <div class="relative group max-w-sm w-full">
+                        <div class="absolute -inset-2 rounded-2xl bg-gradient-to-r from-gold-500/40 via-brand-500/20 to-gold-400/40 blur-lg opacity-70 group-hover:opacity-100 transition duration-500"></div>
+                        <div class="relative rounded-2xl overflow-hidden border-2 border-gold-400/40 bg-navy-950 shadow-2xl">
+                            <img src="assets/images/east-africa-mosaic.jpg" 
+                                 alt="East Africa Map Mosaic with vibrant cultural patterns and community faces"
+                                 class="w-full h-auto object-cover transform group-hover:scale-105 transition duration-700"
+                                 onerror="this.src='assets/images/east-africa-mosaic.png'; this.onerror=function(){ document.getElementById('mosaicFallback').classList.remove('hidden'); this.style.display='none'; }">
+                            
+                            <div id="mosaicFallback" class="hidden p-8 text-center bg-navy-900">
+                                <i data-lucide="map" class="w-12 h-12 mx-auto text-gold-400 mb-3"></i>
+                                <h4 class="font-bold text-white text-base">East Africa Map Mosaic</h4>
+                                <p class="text-xs text-slate-400 mt-2">Save your image as:</p>
+                                <code class="text-xs text-gold-300 bg-black/40 px-2 py-1 rounded mt-2 inline-block">assets/images/east-africa-mosaic.jpg</code>
+                            </div>
+                        </div>
+                        <div class="text-center mt-3">
+                            <span class="text-[11px] uppercase tracking-widest text-gold-400 font-semibold">East African Cultural Tapestry</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section id="voices" class="py-24 bg-white border-b border-slate-200 relative overflow-hidden">
+    <div class="voice-orb bg-emerald-100 w-96 h-96 -top-20 -left-20"></div>
+    <div class="voice-orb bg-amber-100 w-96 h-96 -bottom-20 -right-20"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-4 reveal-node">
+            <div>
+                <span class="text-xs font-bold tracking-widest text-brand-700 uppercase flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Authentic Community Impact
+                </span>
+                <h2 class="font-serif text-3xl sm:text-5xl font-bold text-slate-900 mt-2">Voices From Our Community</h2>
+            </div>
+            <div class="flex items-center gap-3">
+                <button onclick="prevVoice()" aria-label="Previous story" class="w-11 h-11 rounded-full border border-slate-300 bg-white hover:bg-slate-50 text-slate-800 flex items-center justify-center transition-all shadow-sm">
+                    <i data-lucide="chevron-left" class="w-5 h-5"></i>
+                </button>
+                <button onclick="nextVoice()" aria-label="Next story" class="w-11 h-11 rounded-full border border-slate-300 bg-white hover:bg-slate-50 text-slate-800 flex items-center justify-center transition-all shadow-sm">
+                    <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-slate-900 via-navy-900 to-slate-950 text-white rounded-3xl p-8 sm:p-16 relative shadow-xl overflow-hidden border border-slate-800">
+            <div class="absolute -top-6 -right-6 text-white/5 font-serif text-[180px] select-none pointer-events-none leading-none">"</div>
+
+            <!-- Slide 0: Medhin -->
+            <div class="voice-slide active" data-index="0" role="tabpanel" id="voice-panel-0" aria-live="polite">
+                <div class="max-w-3xl space-y-6">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-emerald-500/20 text-emerald-300 text-xs font-semibold uppercase tracking-wider">
+                        Settlement &amp; Housing Navigation
+                    </div>
+                    <p class="font-serif text-2xl sm:text-3xl text-slate-100 leading-relaxed">
+                        "When I arrived from Ethiopia, the language barrier made simple paperwork overwhelming. IOS helped me find housing and connected me with an Amharic-speaking caseworker who walked every step with me."
+                    </p>
+                    <div class="flex items-center gap-4 pt-4 border-t border-white/10">
+                        <div class="avatar-wrap border-2 border-emerald-400 shadow-md">
+                            <span class="avatar-initials bg-emerald-500/20 text-emerald-300">M</span>
+                            <img src="assets/images/testimonials/medhin.jpg" alt="Medhin T."
+                                 onload="this.classList.add('is-visible')"
+                                 onerror="this.remove()">
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white text-base">Medhin T.</h4>
+                            <span class="text-xs text-slate-400">Calgary Resident since 2022</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 1: Joseph -->
+            <div class="voice-slide" data-index="1" role="tabpanel" id="voice-panel-1" aria-live="polite">
+                <div class="max-w-3xl space-y-6">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-amber-500/20 text-amber-300 text-xs font-semibold uppercase tracking-wider">
+                        Senior Active Living Program (SALP)
+                    </div>
+                    <p class="font-serif text-2xl sm:text-3xl text-slate-100 leading-relaxed">
+                        "The Senior Active Living Program gave my parents a community again. They went from feeling isolated at home to looking forward to weekly coffee ceremonies and social outings."
+                    </p>
+                    <div class="flex items-center gap-4 pt-4 border-t border-white/10">
+                        <div class="avatar-wrap border-2 border-amber-400 shadow-md">
+                            <span class="avatar-initials bg-amber-500/20 text-amber-300">J</span>
+                            <img src="assets/images/testimonials/joseph.jpg" alt="Joseph K."
+                                 onload="this.classList.add('is-visible')"
+                                 onerror="this.remove()">
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white text-base">Joseph K.</h4>
+                            <span class="text-xs text-slate-400">Program Participant Family Member</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 2: Partner / CPS -->
+            <div class="voice-slide" data-index="2" role="tabpanel" id="voice-panel-2" aria-live="polite">
+                <div class="max-w-3xl space-y-6">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-sky-500/20 text-sky-300 text-xs font-semibold uppercase tracking-wider">
+                        Community Advisory &amp; Anti-Racism
+                    </div>
+                    <p class="font-serif text-2xl sm:text-3xl text-slate-100 leading-relaxed">
+                        "IOS bridges critical communication gaps between law enforcement and East African communities through proactive dialogue, cultural education, and mutual respect."
+                    </p>
+                    <div class="flex items-center gap-4 pt-4 border-t border-white/10">
+                        <div class="avatar-wrap border-2 border-sky-400 shadow-md">
+                            <span class="avatar-initials bg-sky-500/20 text-sky-300 text-xs">CPS</span>
+                            <img src="assets/images/testimonials/cps-partner.jpg" alt="Community Advisory Board"
+                                 onload="this.classList.add('is-visible')"
+                                 onerror="this.remove()">
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white text-base">Community Advisory Board</h4>
+                            <span class="text-xs text-slate-400">Calgary Police Service Partner</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2 mt-8 pt-4" role="tablist" aria-label="Community stories" id="voiceDots">
+                <button role="tab" aria-selected="true" aria-controls="voice-panel-0" onclick="setVoice(0)" class="voice-dot w-8 h-2 rounded-full bg-emerald-400 transition-all"></button>
+                <button role="tab" aria-selected="false" aria-controls="voice-panel-1" onclick="setVoice(1)" class="voice-dot w-2 h-2 rounded-full bg-slate-600 transition-all"></button>
+                <button role="tab" aria-selected="false" aria-controls="voice-panel-2" onclick="setVoice(2)" class="voice-dot w-2 h-2 rounded-full bg-slate-600 transition-all"></button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Calendar / Sessions -->
+<section id="events" class="py-20 bg-slate-50 border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-end mb-10 reveal-node">
+            <div>
+                <span class="text-xs font-bold tracking-widest text-brand-700 uppercase">Community Calendar</span>
+                <h3 class="text-2xl sm:text-3xl font-serif font-bold text-slate-900 mt-1">Upcoming Events &amp; Sessions</h3>
+            </div>
+            <button type="button" onclick="openModal()" class="text-xs font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1">
+                View Full Calendar <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm reveal-node">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md">Mental Wellness</span>
+                    <span class="text-xs text-slate-500 font-mono">Thursdays</span>
+                </div>
+                <h4 class="font-bold text-slate-900 text-base mb-1">Youth Wellness Circle</h4>
+                <p class="text-xs text-slate-600 mb-4">Safe peer discussions on stress management, cultural identity, and academics.</p>
+                <span class="text-xs font-medium text-slate-500 flex items-center gap-1.5"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400"></i> Downtown Office · 5:00 PM</span>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm reveal-node">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-xs font-bold text-sky-700 bg-sky-50 px-2.5 py-1 rounded-md">Settlement</span>
+                    <span class="text-xs text-slate-500 font-mono">Oct 18</span>
+                </div>
+                <h4 class="font-bold text-slate-900 text-base mb-1">Tenant Rights in Alberta</h4>
+                <p class="text-xs text-slate-600 mb-4">Learn about lease agreements, landlord protections, and deposit assistance with translation.</p>
+                <span class="text-xs font-medium text-slate-500 flex items-center gap-1.5"><i data-lucide="video" class="w-3.5 h-3.5 text-slate-400"></i> Live Online Session via Zoom</span>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm reveal-node">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-xs font-bold text-amber-800 bg-amber-50 px-2.5 py-1 rounded-md">Seniors (SALP)</span>
+                    <span class="text-xs text-slate-500 font-mono">Bi-Weekly</span>
+                </div>
+                <h4 class="font-bold text-slate-900 text-base mb-1">Senior Social &amp; Coffee Ceremony</h4>
+                <p class="text-xs text-slate-600 mb-4">Traditional coffee and tea social hour for older adults to build connections and stay engaged.</p>
+                <span class="text-xs font-medium text-slate-500 flex items-center gap-1.5"><i data-lucide="users" class="w-3.5 h-3.5 text-slate-400"></i> Community Hall · 11:00 AM</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Donate CTA -->
+<section id="donate" class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-navy-900 rounded-3xl p-8 sm:p-14 text-center text-white relative overflow-hidden shadow-xl">
+            <div class="relative z-10 max-w-2xl mx-auto space-y-6">
+                <span class="px-3.5 py-1 rounded-full bg-gold-400/20 text-gold-300 text-xs font-bold uppercase tracking-wider">
+                    Join Our Mission
+                </span>
+                <h2 class="font-serif text-3xl sm:text-5xl font-bold leading-tight">
+                    Support Culturally Rooted Care in Calgary
+                </h2>
+                <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+                    Your contribution directly finances emergency settlement counseling, language translation, and senior community programs.
+                </p>
+                <div class="flex flex-wrap justify-center gap-4 pt-4">
+                    <a href="https://www.immigrantoutreachsociety.ca/donate-2/" class="bg-gold-500 hover:bg-gold-400 text-slate-950 font-bold px-8 py-3.5 rounded-xl transition-all shadow-lg text-sm">
+                        Make a Donation
+                    </a>
+                    <button onclick="openModal()" class="bg-white/10 hover:bg-white/20 text-white font-semibold px-6 py-3.5 rounded-xl border border-white/20 transition-all text-sm">
+                        Contact Caseworkers
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</main>
+
+<!-- Footer -->
+<footer class="bg-navy-950 text-slate-400 py-14 text-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-6">
+        <div class="flex items-center gap-3">
+            <span class="brand-logo w-8 h-8 rounded-lg bg-gold-500 flex items-center justify-center text-slate-950 font-black text-sm">
+                IOS
+                <img class="brand-logo-img js-brand-logo" alt="Immigrant Outreach Society logo">
+            </span>
+            <span class="text-white font-bold text-sm">Immigrant Outreach Society</span>
+        </div>
+        <p>© 2026 Immigrant Outreach Society. All rights reserved. Registered Charity in Alberta, Canada.</p>
+        <div class="flex gap-4 items-center">
+            <a href="#" class="hover:underline">Privacy Policy</a>
+            <a href="#" class="hover:underline">Transparency</a>
+            <a href="#" class="hover:underline">Contact</a>
+            <span class="opacity-30">|</span>
+            <a href="https://slack.com/signin" target="_blank" rel="noopener" class="flex items-center gap-1 hover:underline hover:text-white">
+                <i data-lucide="lock" class="w-3.5 h-3.5"></i> Staff Login
+            </a>
+        </div>
+    </div>
+</footer>
+
+<!-- Intake Modal -->
+<div id="intakeModal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white border border-slate-200 rounded-2xl max-w-lg w-full p-6 sm:p-8 relative shadow-2xl">
+        <button onclick="closeModal()" aria-label="Close" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 p-1">
+            <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+        <h3 class="font-serif text-2xl font-bold text-slate-900 mb-1">Request Direct Support</h3>
+        <p class="text-xs text-slate-500 mb-6">Confidential assistance delivered by our Calgary caseworkers.</p>
+
+        <form onsubmit="handleModalSubmit(event)" class="space-y-4">
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Full Name</label>
+                <input type="text" required placeholder="Your name" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm text-slate-900 focus:outline-none focus:border-brand-600">
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Phone Number</label>
+                    <input type="tel" required placeholder="(403) 000-0000" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm text-slate-900 focus:outline-none focus:border-brand-600">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Language</label>
+                    <select class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm text-slate-900 focus:outline-none focus:border-brand-600">
+                        <option>English</option>
+                        <option>Amharic (አማርኛ)</option>
+                        <option>Tigrinya (ትግርኛ)</option>
+                        <option>Somali (Soomaali)</option>
+                        <option>Oromo (Afaan Oromoo)</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">How can we assist you?</label>
+                <textarea rows="3" placeholder="Housing inquiries, paperwork translation, counseling..." class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm text-slate-900 focus:outline-none focus:border-brand-600"></textarea>
+            </div>
+            <button type="submit" class="w-full bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold py-3 rounded-lg text-sm transition-all mt-2">
+                Submit Request
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+    lucide.createIcons();
+
+    // Scroll reveal
+    const revealElements = document.querySelectorAll('.reveal-node');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) { entry.target.classList.add('active'); observer.unobserve(entry.target); }
+        });
+    }, { threshold: 0.12 });
+    revealElements.forEach(el => observer.observe(el));
+
+    // Cursor spotlight on journey cards
+    document.querySelectorAll('.js-interactive-card').forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            card.style.setProperty('--cursor-x', `${((e.clientX - rect.left) / rect.width) * 100}%`);
+            card.style.setProperty('--cursor-y', `${((e.clientY - rect.top) / rect.height) * 100}%`);
+            card.style.setProperty('--glow-opacity', '0.65');
+        });
+        card.addEventListener('mouseleave', () => {
+            card.style.setProperty('--glow-opacity', '0.15');
+            card.style.setProperty('--cursor-x', '50%');
+            card.style.setProperty('--cursor-y', '50%');
+        });
+    });
+
+    // Voice carousel
+    let currentVoice = 0;
+    const voiceSlides = document.querySelectorAll('.voice-slide');
+    const voiceDots = document.querySelectorAll('.voice-dot');
+
+    function showVoice(index) {
+        voiceSlides.forEach((slide, i) => slide.classList.toggle('active', i === index));
+        voiceDots.forEach((dot, i) => {
+            const active = i === index;
+            dot.className = active ? 'voice-dot w-8 h-2 rounded-full bg-emerald-400 transition-all' : 'voice-dot w-2 h-2 rounded-full bg-slate-600 transition-all';
+            dot.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        currentVoice = index;
+    }
+    function nextVoice() { showVoice((currentVoice + 1) % voiceSlides.length); }
+    function prevVoice() { showVoice((currentVoice - 1 + voiceSlides.length) % voiceSlides.length); }
+    function setVoice(index) { showVoice(index); }
+
+    const voiceDotsEl = document.getElementById('voiceDots');
+    if (voiceDotsEl) {
+        voiceDotsEl.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') { e.preventDefault(); nextVoice(); }
+            if (e.key === 'ArrowLeft') { e.preventDefault(); prevVoice(); }
+        });
+    }
+
+    // Mobile menu
+    function toggleMobileMenu() {
+        const menu = document.getElementById('mobileMenu');
+        const btn = document.getElementById('mobileMenuBtn');
+        const open = menu.classList.toggle('hidden') === false;
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+
+    // Logo resolution
+    (() => {
+        const candidates = ['assets/images/logo.png', 'assets/images/logo.jpg'];
+        document.querySelectorAll('.js-brand-logo').forEach(img => {
+            let i = 0;
+            const tryNext = () => { if (i < candidates.length) img.src = candidates[i++]; else img.remove(); };
+            img.addEventListener('error', tryNext);
+            img.addEventListener('load', () => img.classList.add('is-visible'));
+            tryNext();
+        });
+    })();
+
+    // Modal
+    function openModal() { document.getElementById('intakeModal').classList.remove('hidden'); }
+    function closeModal() { document.getElementById('intakeModal').classList.add('hidden'); }
+    function handleModalSubmit(e) {
+        e.preventDefault();
+        closeModal();
+        alert('Thank you! An intake coordinator from Immigrant Outreach Society will contact you shortly.');
+    }
+</script>
+</body>
+</html>
